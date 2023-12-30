@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+   textarea {
+   resize: none;
+   max-height: 40px;
+   }
+</style>
+
+<section class="content">
+<div class="row">
+<div class="whitebox">
+<div class="col-lg-4 col-md-6">
+   <div class="form-group">
+      <label  class=" col-xl-8 col-form-label">Project</label>
+      <div class="col-xl-12">
+         <select readonly name="assign_project" autofocus class="form-control">
+            <option value="">{{ task_obj.project }}</option>
+         </select>
+      </div>
+   </div>
+</div>
+<div class="col-lg-4 col-md-6">
+   <div class="form-group">
+      <label  class=" col-xl-8 col-form-label">Task</label>
+      <div class="col-xl-12">
+         <textarea class="form-control" readonly name="task" style="height:40px;" rows="1" >{{task_obj.description|default:''}} </textarea>
+      </div>
+   </div>
+</div>
+<div class="col-lg-4 col-md-6">
+   <div class="form-group">
+      <label  class=" col-xl-8 col-form-label">Task Status</label>
+      <div class="col-xl-12">
+         <select id="company" readonly name="task_status" autofocus class="form-control">
+            <option value="In Progress">{{task_obj.task_status}}</option>
+         </select>
+      </div>
+   </div>
+</div>
+<div class="col-lg-4 col-md-6">
+   <div class="form-group">
+      <label  class=" col-xl-8 col-form-label">Task Date</label>
+      <div class="col-xl-12">
+         <textarea class="form-control" name="task" style="height:40px;" rows="1"  readonly>{{task_obj.created_at|date:'d/m/Y'}} </textarea>
+      </div>
+   </div>
+</div>
+<div class="col-lg-4 col-md-6">
+   <div class="form-group">
+      <label class=" col-xl-8 col-form-label">Estimated Time</label>
+      <div >
+         <input style="width:50%;" max="24" min="0" readonly value="{{estimate_time.0|default:'0'}}" placeholder="Hourse" name="task_hours" type="number" class="form-control">
+         <input type="number" readonly step="10" min="0" max="59" value="{{estimate_time_min|default:'0'}}" placeholder="Minutes" name="task_minutes" style="width:50%; margin-left:51%; margin-top:-39px;" class="form-control">
+      </div>
+   </div>
+</div>
+<div class="col-lg-4 col-md-6">
+   <div class="form-group">
+      <label class=" col-xl-8 col-form-label">Actual Time</label>
+      <div >
+         <input style="width:50%;" readonly min="0" max="24" value="{{actual_time.0|default:'0'}}" placeholder="Hourse" name="actual_time_task_hours" type="number" class="form-control">
+         <input type="number" readonly step="10" min="0" max="59"  value="{{actual_time.1|default:'0'}}" placeholder="Minutes" name="actual_time_task_minutes" style="width:50%; margin-left:51%; margin-top:-40px;" class="form-control">
+      </div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-md-12">
+      <a href="/">
+      <button type="button" class="btn btn-primary bluebtn bluebtnbg">Back</button>
+      </a>
+   </div>
+</div>
+
+<script>
+   $(function () {
+   $("select").select2();
+   });
+</script>
+{% endblock %}

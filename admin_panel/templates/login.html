@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en-GB" xml:lang="en-US">
+   <head>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <title>Time Tracker Login</title>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <meta name="robots" content="noindex, nofollow">
+      <meta name="googlebot" content="noindex, nofollow">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      {% load static %}
+      <script type="text/javascript" src="/js/lib/dummy.js"></script>
+      <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+      <script type="text/javascript" src="//code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+      <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+      <style type="text/css">
+         .login,
+         .image {
+         min-height: 100vh;
+         }
+         .bg-image {
+         background-image: url("{% static 'img/time_img.jpg' %}");
+         filter: blur(2px);
+         background-size: cover;
+         background-color: gray;
+         background-position: center;
+         }
+      </style>
+   </head>
+   <body>
+      <div class="container-fluid">
+         <div class="row no-gutter">
+            <div class="col-md-6 d-none d-md-flex bg-image"></div>
+            <div class="col-md-6 bg-light">
+               <div style="color:blue; font-size:50px;">
+                  <center><strong>Task Tracker</strong></center>
+               </div>
+               <div class="login d-flex align-items-center py-5">
+                  <div class="container">
+                     <div class="row">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}" role="alert" style="width:48%;margin-left:25%;color:red;">
+                           {{ message }}
+                        </div>
+                        {% endfor %}
+                        <div class="col-lg-10 col-xl-7 mx-auto">
+                           <center><img src="{% static 'images/logo.png' %}" height="91px;" width="150px;" alt="logo image"> </center>
+                           <span style="margin-left: 50px; color: red;">{{ error }}</span>
+                           <form method="POST" action="">
+                              {% csrf_token %}
+                              <div class="form-group mb-3">
+                                 <input id="inputEmail" name="email" type="email" placeholder="Enter Email" required="required" autofocus="" class="form-control rounded-pill border-0 shadow-sm px-4" >
+                              </div>
+                              <div class="form-group mb-3">
+                                 <input id="inputPassword" name="password" type="password" placeholder="Password" required="required" class="form-control rounded-pill border-0 shadow-sm px-4 text-primary">
+                              </div>
+                              <button type="submit" class="btn btn-primary btn-block text-uppercase mb-2 rounded-pill shadow-sm">Sign in</button>
+                        </div>
+                        </form>
+                     </div>
+                     <a href="/forgot_password" style="margin-left: 283px;">Forgot Password ?</a>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      </div>
+      <script>
+         $(document).ready(function() {
+         setTimeout(function() {
+             $(".alert").alert('close');
+         }, 3000);
+         });
+      </script>
+   </body>

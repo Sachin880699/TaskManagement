@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+   textarea {
+   resize: none;
+   }
+   .li_menu_email{
+   margin-top:-49px;
+   }
+</style>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+
+
+
+
+<section class="content">
+<form method="POST" enctype="multipart/form-data" id="create_task_form_id">
+   {% csrf_token %}
+   <div class="row">
+   <div class="whitebox">
+   <div class="col-lg-4 col-md-6">
+      <div class="form-group">
+         <label class="col-xl-8 col-form-label">Project</label>
+         <div class="col-xl-12">
+            <select id="all_project" name="assign_project"  class="form-control" required>
+               {% for res in employee_assing_project %}
+               {% if forloop.last  %}
+               <option selected="selected" value="{{ res.id }}">{{ res.name }}</option>
+               {% else %}
+               <option value="{{ res.id }}">{{ res.name }} </option>
+               {% endif %}
+               {% endfor %}
+            </select>
+         </div>
+      </div>
+   </div>
+   <div class="col-lg-4 col-md-6">
+      <div class="form-group">
+         <label  class=" col-xl-8 col-form-label">Task</label>
+         <div class="col-xl-12">
+            <div class="autocomplete">
+            <input class="form-control" type="text" id="create_task_id" required name="task" style="height:40px;">
+  </div>
+
+
+         </div>
+         <ul class="list"></ul>
+
+      </div>
+   </div>
+
+   <div class="col-lg-4 col-md-6">
+      <div class="form-group">
+         <label  class=" col-xl-8 col-form-label">Estimated Time</label>
+         <div class="col-xl-12">
+            <input style="width:124px;" value="0" max="60" min="0" required placeholder="Hour" name="task_hours" type="number" class="form-control">
+            <input type="number" value="0" min="0" max="59" required placeholder="Minutes" step="15" name="task_minutes" style="width:124px; margin-left:127px; margin-top:-39px;" class="form-control">
+         </div>
+      </div>
+   </div>
+   {% if all_pending_and_in_progress_task %}
+   <div class="col-lg-4 col-md-6">
+      <div class="form-group">
+         <label  class=" col-xl-8 col-form-label">Check Tasks To Carry Forward</label>
+         <div class="col-xl-12">
+            <div class="form-control" style="height:100px;width:616px;font:16px Arial, Serif;overflow:auto;">
+               <input onClick="toggle(this)" type="checkbox" id="uncheck_select_all" >
+               <label>Select All</label><br/>
+               {% for res in all_pending_and_in_progress_task %}
+               <input type="checkbox" onclick="uncheck_all_option()" id="vehicle1" name="pending_task[]" value="{{res.id}}">
+               <label for="vehicle1">{{res.task_description}}</label> &nbsp;( {{res.project}} {{res.created_at|date:"d-M-Y"}})     <br>
+               {% endfor %}
+            </div>
+         </div>
+      </div>
+   </div>
+   {% endif %}
+   <div class="second">
+      <div class="col-md-12 text-center">
+         <a href="/"><button class="btn btn-primary btn-lg" style="background-color:#393830;" type="button" >Back</button></a>
+
+         <button   class="btn btn-primary btn-lg" type="submit" >Create</button>
+
+      </div>
+   </div>
+      </form>
+
+
+
+<script language="JavaScript">
+function toggle_cancel(source) {
+  checkboxes = document.getElementsByName('cancel_pending_task[]');
+  for(var i=0, n=checkboxes.length; i<n; i++) {
+    checkboxes[i].checked = source.checked;
+  }
+}
+function cancel_uncheck_all_option(){
+		document.getElementById("cancel_uncheck_select_all").checked = false;
+		}
+function toggle(source) {
+  checkboxes = document.getElementsByName('pending_task[]');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+  }
+}
+function uncheck_all_option(){
+		document.getElementById("uncheck_select_all").checked = false;
+		}
+   function hide_selected_id(){
+   var all_location_id = document.querySelectorAll('input[name="pending_task[]"]:checked');
+   var aIds = [];
+   var data = []
+   for(var x = 0, l = all_location_id.length; x < l;  x++)
+   {
+       aIds.push(all_location_id[x].value);
+       data.push(Number(all_location_id[x].value));
+       var link = document.getElementById(Number(all_location_id[x].value));
+       console.log(link);
+       link.style.display = 'none';
+       link.style.visibility = 'hidden';
+   }
+   var str = aIds.join(',');
+   console.log(str);
+   console.log(data);
+   }
+   var options = $("#all_project option");
+options.detach().sort(function(first_name,b) {
+    var at = $(first_name).text();
+    var bt = $(b).text();
+    return (at > bt)?1  :((at < bt)?-1:0);
+});
+options.appendTo("#all_project");
+   $(function () {
+   $("select").select2();
+   });
+
+
+   function IsEmpty() {
+        if (document.getElementById("create_task_id").value === "") {
+          alert("fill up task field");
+          window.location.reload()
+          return false;
+
+        }
+        return true;
+
+}
+</script>
+
+<!--   Create task auto suggest previous created task related to member type task ------------->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+   <script type="text/javascript">
+         $("#create_task_id").on('click', function () {
+                var create_task_id = $('#create_task_id').val();
+                var project_id = $('#all_project').val();
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: "" ,
+                    data: { project_id : project_id, create_task_id: create_task_id, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                    success: function (data)
+                    {
+                        all_task_array = []
+                        if (data['message'] === false) {
+                            $('#created_task_list').empty();
+                            $('#created_task_list').append('<option value="">Please Select</option>');
+                        } else {
+                            for (var i = 0; i < data.length; i++) {
+                                 all_task_array.push(String(data[i].task_description));
+                            }
+                           function autocomplete(inp, arr) {
+           var currentFocus;
+           inp.addEventListener("input", function(e) {
+             var a, b, i, val = this.value;
+             closeAllLists();
+             if (!val) {
+               return false;
+             }
+             currentFocus = -1;
+             a = document.createElement("DIV");
+             a.setAttribute("id", this.id + "autocomplete-list");
+             a.setAttribute("class", "autocomplete-items");
+             this.parentNode.appendChild(a);
+             for (i = 0; i < arr.length; i++) {
+               if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                 b = document.createElement("DIV");
+                 b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                 b.innerHTML += arr[i].substr(val.length);
+                 b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                 b.addEventListener("click", function(e) {
+                   inp.value = this.getElementsByTagName("input")[0].value;
+                   closeAllLists();
+                 });
+                 a.appendChild(b);
+               }
+             }
+           });
+           inp.addEventListener("keydown", function(e) {
+             var x = document.getElementById(this.id + "autocomplete-list");
+             if (x) x = x.getElementsByTagName("div");
+             if (e.keyCode == 40) {
+               currentFocus++;
+               addActive(x);
+             } else if (e.keyCode == 38) { //up
+               currentFocus--;
+               addActive(x);
+             } else if (e.keyCode == 13) {
+               e.preventDefault();
+               if (currentFocus > -1) {
+                 if (x) x[currentFocus].click();
+               }
+             }
+           });
+
+           function addActive(x) {
+             if (!x) return false;
+             removeActive(x);
+             if (currentFocus >= x.length) currentFocus = 0;
+             if (currentFocus < 0) currentFocus = (x.length - 1);
+             x[currentFocus].classList.add("autocomplete-active");
+           }
+
+           function removeActive(x) {
+             for (var i = 0; i < x.length; i++) {
+               x[i].classList.remove("autocomplete-active");
+             }
+           }
+           function closeAllLists(elmnt) {
+             var x = document.getElementsByClassName("autocomplete-items");
+             for (var i = 0; i < x.length; i++) {
+               if (elmnt != x[i] && elmnt != inp) {
+                 x[i].parentNode.removeChild(x[i]);
+               }
+             }
+           }
+           document.addEventListener("click", function(e) {
+             closeAllLists(e.target);
+           });
+         }
+         var countries = all_task_array
+         autocomplete(document.getElementById("create_task_id"), countries);
+                        }
+                    }
+                });
+            });
+    </script>
+
+<script>
+window.onload = function() {
+  document.getElementById("create_task_id").value = "Enter Task ";
+  document.getElementById("outside_click_button").click();
+  document.getElementById("create_task_id").value = ";
+};
+
+
+
+
+
+    </script>
+
+{% endblock %}

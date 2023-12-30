@@ -1,0 +1,31 @@
+/**
+ *  renders the dropdown message and
+ *  handles the user selection
+ * @param {Array} drop_down_data json array
+ */
+function renderForm(form_data) {
+    let form_inputs = "";
+    for (let i = 0; i < form_data.length; i += 1) {
+       form_inputs += `<input type="${form_data[i].type}" id="inputs" name="name_${i+1}" placeholder="${form_data[i].value}" required>`;
+    }
+	const form_obj = `<center><div class="formMsg"><form id="frm1" action="" method="post">${form_inputs}<br><br><input type="submit" value="Submit"></form></div></center>`;
+    //const drop_down_select = `<div class="dropDownMsg"><select class="browser-default dropDownSelect"> <option value="" disabled selected>Choose your option</option><option value="A">A</option></select></div>`;
+    $(".chats").append(form_obj);
+	scrollToBottomOfResults();
+    // add event handler if user selects a option.
+    // eslint-disable-next-line func-names
+    //$("select").on("change", function () {
+        //let value = "";
+        //let label = "";
+        //$("select option:selected").each(() => {
+            //label += $(this).val();
+            //value += $(this).val();
+        //});
+
+    setUserResponse(form_data[1].value);
+        // eslint-disable-next-line no-use-before-define
+      //send("Form");
+      //$(".formMsg").remove();
+   //});
+}
+

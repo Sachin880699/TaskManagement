@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<style>
+
+   .li_menu_email{
+   margin-top:-49px;
+   }
+   .no-sort::after { display: none!important; }
+   .no-sort { pointer-events: none!important; cursor: default!important; }
+
+</style>
+<div class="row pt1">
+   <div class="col-md-12">
+      <a href="{% url 'create_task' %}">
+      <button type="submit" class="btn btn-primary bluebtn bluebtnbg cretright">Create</button>
+      </a>
+   </div>
+</div>
+<form method="post">
+   {% csrf_token %}
+   <span style="margin-left:16px;"><strong>Task Date</strong></span><span style="margin-left:124px;"><strong>Task Assignee</strong></span>
+   <br>
+   <div class="col-xl-4">
+      <select required id="company" style="width:193px; margin-left:200px; margin-top:-40px;"  name="filter_by" autofocus class="form-control">
+         <option value="All" >All</option>
+         {% for res in all_member %}
+         {% if res.id == current_member_id %}
+         <option value="{{res.id}}" selected>{{res.name}}</option>
+         {% else %}
+         <option value="{{res.id}}">{{res.name}}</option>
+         {% endif %}
+         {% endfor %}
+      </select>
+   </div>
+   <input type="date" required id="filter_date_value" class="form-control" name="filter_date" style="width:180px; margin-left:17px; margin-top:-41px;" />
+   <button type="submit" class="btn btn-primary" style="margin-left:403px; margin-top:-63px;"><i class="glyphicon glyphicon-search"></i></button>
+</form>
+
+<section class="contentt">
+   <div class="row">
+      <div id="no-more-tables">
+         <table class="col-md-12 table-bordered table-striped table-condensed cf" id="hotel" >
+            <thead class="cf">
+               <tr class="cff">
+                  <th>Sr No</th>
+                  <th>Member Name</th>
+                  <th>Project Name</th>
+                  <th>Task</th>
+                  <th>Estimated Time</th>
+                  <th>Actual Time</th>
+                  <th>Task Status</th>
+                  <th>Created At</th>
+                  <th style="width:170px;" class="no-sort">Action</th>
+               </tr>
+            </thead>
+            <tbody>
+               {% for res in task_obj %}
+               <tr id="{{ res.id }}">
+                  <td data-title="Company" >{{ forloop.counter }}</td>
+                  <td data-title="Company">{{ res.member|default:"" }}</td>
+                  <td data-title="Company">{{ res.project|default:"" }}</td>
+                  <td data-title="Company">{% if res.description|wordcount < 30 %} {{ res.description|default:"" }} {% else %} {{ res.description|truncatechars:60|default:"" }}
+                     <a href=""
+                        class="building-link"
+                         data-toggle="modal"
+                         data-target="#task_display_modal"
+                         data-task_description="{{ res.task_description }}"
+
+                        style="color:blue;">View More</a> {% endif %}  </td>
+                  <td data-title="Change" class="numeric">{{res.estimated_time|default:""}} </td>
+                  <td data-title="Change" class="numeric">{{res.actual_time|default:""}}</td>
+                  <td data-title="Change" class="numeric">{{res.task_status|default:""}}</td>
+                  <td data-title="Change" class="numeric">{{res.created_at|date:"d-m-Y"|default:""}} {{res.created_time|default_if_none:""}}</td>
+                  <td data-title="Change %" class="numeric">
+                     <a href="task_details/{{ res.id }}"><span class="greenbg" style="
+                        width: 32px;
+                        height: 32px;
+                        text-align: center;
+                        padding: 3px 3px;
+                        font-size: 18px;"><i class="fa fa-eye" style="font-size: 16px;"></i></span></a>
+                     {% if res.member.id == user.id %}
+                     <a href="update_task/{{ res.id }}"><span class="yellobg" style="
+                        width: 32px;
+                        height: 32px;
+                        text-align: center;
+                        padding: 3px 3px;
+                        font-size: 18px;"><i class="fa fa-edit" style="font-size: 16px;"></i></span></a>
+                     <a href="delete_task/{{ res.id }}"><span class="redbg" style="
+                        width: 32px;
+                        height: 32px;
+                        text-align: center;
+                        padding: 3px 3px;
+                        font-size: 18px;" onclick="return confirm('Are you sure you want to delete task ?');"><i class="fa fa-trash-o"
+                        style="font-size: 16px;"></i></span></a>
+                     {% endif %}
+                  </td>
+               </tr>
+               {% endfor %}
+            </tbody>
+         </table>
+      </div>
+   </div>
+</section>
+
+
+<!--+++++++++++++++++++++++++++++ Testing +++++++-->
+
+<!-- Modal -->
+<div class="modal fade" id="task_display_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+         <h4 class="modal-title" style="color:black;" id="building-task_description"></h4><br/>
+        <button type="button" style="margin-left:230px;" class="btn btn-primary" data-dismiss="modal">close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+$('.building-link').click(function(){
+    $('#building-task_description').html($(this).data('task_description'));
+
+});
+
+</script>
+
+
+<!--++++++++++++++++++++++++++++ End Testing ++++++++++-->
+
+
+<script>
+   document.getElementById("filter_date_value").defaultValue = "{{filter_date}}";
+   $(document).ready(function () {
+           $('#hotel').DataTable({
+           });
+           });
+</script>
+{% endblock %}

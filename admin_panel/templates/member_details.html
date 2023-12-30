@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<head>
+   <title>Member Details</title>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<br/>
+<br/>
+<br/>
+<br/>
+<main style="color: black; margin-left: 20px;" >
+   <div class="container">
+   <br>
+   <div class="row " style="
+      width: 990px;
+      border-radius: 10px;
+      box-shadow: 5px 2px #888888;
+      height: 500px;
+      border: 1px solid gray;
+      padding: 50px;
+      margin: 20px;">
+      <div class="col-lg-6 col-md-6">
+         <div class="form-group">
+            <label  class=" col-xl-8 col-form-label">Member Name</label>
+            <div class="col-xl-12">
+               <input type="text" placeholder="Employee Name" value="{{employee_obj.name}}" readonly title="Allow only fideltech domain" onkeypress='return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode == 32))' class="form-control" name="employee_name"  required>
+            </div>
+         </div>
+      </div>
+      <div class="col-lg-6 col-md-6">
+         <div class="form-group">
+            <label  class=" col-xl-8 col-form-label">Member Email</label>
+            <div class="col-xl-12">
+               <input type="email" placeholder="Employee Email" value="{{employee_obj.email}}" readonly="" class="form-control" pattern="[\w.%+-]+@fideltech\.com" name="email"  required>
+            </div>
+         </div>
+      </div>
+      <div class="col-lg-6 col-md-6">
+         <div class="form-group">
+            <label  class=" col-xl-8 col-form-label">Member Status</label>
+            <div class="col-xl-12">
+               <input type="email" placeholder="Employee Email" value="{{employee_obj.employee_status}}" readonly="" class="form-control" pattern="[\w.%+-]+@fideltech\.com" name="email" id="n_cid" required>
+            </div>
+         </div>
+      </div>
+      <div class="col-lg-6 col-md-6">
+         <div class="form-group">
+            <label  class=" col-xl-8 col-form-label">Member Role</label>
+            <select  name="employee_role" class="form-control" required>
+               <option value="">{{employee_obj.role}}</option>
+            </select>
+         </div>
+      </div>
+      <div class="col-lg-6 col-md-6">
+         <div class="form-group">
+            <label  class=" col-xl-8 col-form-label">Report To</label>
+            <select  name="report_to" class="form-control" required>
+               <option value="">{{employee_obj.report_to.name}}</option>
+            </select>
+         </div>
+      </div>
+      <div class="col-lg-6 col-md-6">
+         <label  class=" col-xl-8 col-form-label">Experty</label>
+         <div style="height:120px;width:414px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;" class="form-control">
+            {% for res in employee_obj.experty.all %}
+            <input type="checkbox" checked name="experty[]" readonly="" value="{{res.id}}">
+            <label >{{res.name}}</label><br>
+            {% endfor %}
+         </div>
+      </div>
+      <div class="col-md-12  text-center">
+         <a href="{% url 'member' %}">
+         <button id="btnSubmit"  type="button" class="btn btn-primary">OK</button>
+         </a>
+      </div>
+   </div>
+</main>
+
+<script type="text/javascript">
+   $(function () {
+       $("#btnSubmit").click(function () {
+           var password = $("#txtPassword").val();
+           var confirmPassword = $("#txtConfirmPassword").val();
+           if (password != confirmPassword) {
+               alert("password does not match.");
+               return false;
+           }
+           return true;
+       });
+   });
+</script>
+{% endblock %}

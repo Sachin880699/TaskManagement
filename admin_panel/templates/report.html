@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<style>
+   .branch_name {
+   background-color: #0069DA; /* Green */
+   border: none;
+   color: white;
+   padding: 15px 32px;
+   text-align: center;
+   text-decoration: none;
+   display: inline-block;
+   font-size: 16px;
+   margin: 4px 2px;
+   cursor: pointer;
+   border-radius :15px;
+   height: 45px;
+   }
+   .branch_name {
+   opacity: 0.6;
+   cursor: not-allowed;
+   }
+</style>
+<div class="container">
+   <br>
+   <br>
+   <br>
+   <br>
+
+<br/>
+<br/>
+<br/>
+
+      <button type="button" class="btn btn-primary" style="margin-left:198px;">User Report</button>
+    <form method="post" action="">
+      {% csrf_token %}
+      <div class="card bg-dark text-white" style="width: 700px; margin-left: 200px; height: 280px">
+         <br>
+         <span style="margin-left:24px;"><strong>Start Date</strong></span> <span style="margin-left:263px;"><strong>End Date</strong></span>
+         <input type="date" class="form-control" value="{{last_month_first_date|date:'Y-m-d'}}" name = 'start_date' style="width: 300px; margin-left: 25px" required><input value="{{this_month_first_date|date:'Y-m-d'}}" type="date" name="end_date" class="form-control" style="width: 300px; margin-left: 355px; margin-top: -40px;" required>
+         <br/>
+         <br/>
+         <br/>
+          <strong style="margin-left:27px;">User</strong>
+         <select id="company" name="member_id" style="width:632px; margin-left:24px;" required autofocus class="form-control">
+            <option value="">Select User</option>
+            {% for res in all_member %}
+            <option value="{{ res.id }}">{{res.name}}</option>
+            {% endfor %}
+         </select>
+         <br>
+         <button type="submit" class="btn btn-danger" style="margin-left: 303px;">EXPORT</button>
+      </div>
+   </form>
+
+
+
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+   textarea {
+   resize: none;
+   max-height: 40px;
+   }
+</style>
+
+<section class="content">
+<div class="row">
+<div class="whitebox">
+   <form method="post">
+      {% csrf_token %}
+<div class="col-lg-4 col-md-6">
+   <div class="form-group">
+      <label  class=" col-xl-8 col-form-label">Project</label>
+      <div class="col-xl-12">
+         <select  name="assign_project" autofocus class="form-control">
+             {% for res in all_project %}
+             {% if task_obj.project.id == res.id %}
+            <option value="{{res.id}}" selected>{{ res.name }}</option>
+             {% else %}
+            <option value="{{res.id}}">{{ res.name }}</option>
+             {% endif %}
+             {% endfor %}
+         </select>
+      </div>
+   </div>
+</div>
+<div class="col-lg-4 col-md-6">
+   <div class="form-group">
+      <label  class=" col-xl-8 col-form-label">Task</label>
+      <div class="col-xl-12">
+         <textarea class="form-control"  name="task" style="height:40px;" rows="1" >{{task_obj.description|default:''}} </textarea>
+      </div>
+   </div>
+</div>
+<div class="col-lg-4 col-md-6">
+   <div class="form-group">
+      <label  class=" col-xl-8 col-form-label">Task Status</label>
+      <div class="col-xl-12">
+         <select id="company"  name="task_status" autofocus class="form-control">
+             {% for res in all_task_status %}
+             {% if task_obj.task_status.id == res.id %}
+            <option value="{{res.id}}" selected>{{res.task_status}}</option>
+             {% else %}
+            <option value="{{res.id}}">{{res.task_status}}</option>
+             {% endif %}
+             {% endfor %}
+         </select>
+      </div>
+   </div>
+</div>
+<div class="col-lg-4 col-md-6">
+   <div class="form-group">
+      <label  class=" col-xl-8 col-form-label">Task Date</label>
+      <div class="col-xl-12">
+          <input type="date" name = 'task_date' value="{{task_obj.created_at}}" class="form-control" />
+      </div>
+   </div>
+</div>
+<div class="col-lg-4 col-md-6">
+   <div class="form-group">
+      <label class=" col-xl-8 col-form-label">Estimated Time</label>
+      <div >
+         <input style="width:50%;" max="24" min="0"  value="{{estimate_time.0|default:'0'}}" placeholder="Hourse" name="task_hours" type="number" class="form-control">
+         <input type="number"  step="10" min="0" max="59" value="{{estimate_time_min|default:'0'}}" placeholder="Minutes" name="task_minutes" style="width:50%; margin-left:51%; margin-top:-39px;" class="form-control">
+      </div>
+   </div>
+</div>
+<div class="col-lg-4 col-md-6">
+   <div class="form-group">
+      <label class=" col-xl-8 col-form-label">Actual Time</label>
+      <div >
+         <input style="width:50%;"  min="0" max="24" value="{{actual_time.0|default:'0'}}" placeholder="Hourse" name="actual_time_task_hours" type="number" class="form-control">
+         <input type="number"  step="10" min="0" max="59"  value="{{actual_time.1|default:'0'}}" placeholder="Minutes" name="actual_time_task_minutes" style="width:50%; margin-left:51%; margin-top:-40px;" class="form-control">
+      </div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-md-12">
+
+      <button type="submit" class="btn btn-primary bluebtn bluebtnbg">submit</button>
+   </div>
+</div>
+      </form>
+
+<script>
+   $(function () {
+   $("select").select2();
+   });
+</script>
+{% endblock %}

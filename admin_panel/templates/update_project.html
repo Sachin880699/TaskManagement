@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<style>
+   textarea {
+   resize: none;
+   }
+</style>
+<head>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<br/>
+<br/>
+<br/>
+<br/>
+<main style="color: black; margin-left: 20px;" >
+   <div class="container">
+   <form method="POST"  enctype="multipart/form-data">
+      {% csrf_token %}
+      <br>
+      <div class="row " style="
+         width: 990px;
+         border-radius: 10px;
+         box-shadow: 5px 2px #888888;
+         height: 600px;
+         border: 1px solid gray;
+         padding: 50px;
+         margin: 20px;"
+         >
+         <div class="col-lg-4 col-md-6">
+            <div class="form-group">
+               <label  class=" col-xl-8 col-form-label">Project Name</label>
+               <div class="col-xl-12">
+                  <input type="text" placeholder="Project Name" value="{{project_obj.name}}"  onkeypress='return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode == 32))' class="form-control" name="project_name" id="n_cid" required>
+               </div>
+            </div>
+         </div>
+         <div class="col-lg-4 col-md-6">
+            <div class="form-group">
+               <label  class=" col-xl-8 col-form-label">Client Name</label>
+               <div class="col-xl-12">
+                  <input type="text" placeholder="Client Name" value="{{project_obj.client_name}}" class="form-control"  name="client_name"  required>
+               </div>
+            </div>
+         </div>
+         <div class="col-lg-4 col-md-6">
+            <div class="form-group">
+               <label  class=" col-xl-8 col-form-label">Start Date</label>
+               <div class="col-xl-12">
+                  <input type="date" placeholder="Start Date" value='{{project_obj.start_date|date:"Y-m-d"}}'  class="form-control"  name="start_date"  required>
+               </div>
+            </div>
+         </div>
+         <div class="col-lg-6 col-md-6">
+            <label class=" col-xl-8 col-form-label">Technology</label>
+            <div style="height:120px;width:414px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;" class="form-control">
+               {% for res in all_experty %}
+               {% if res.id in technoloty_list %}
+               <input type="checkbox" checked name="experty[]" value="{{res.id}}">
+               <label >{{res.name}}</label><br>
+               {% else %}
+               <input type="checkbox"   name="experty[]" value="{{res.id}}">
+               <label >{{res.name}}</label><br>
+               {% endif %}
+               {% endfor %}
+            </div>
+         </div>
+         <div class="col-lg-6 col-md-6">
+            <label  class=" col-xl-8 col-form-label">Project Member</label>
+            <div style="height:120px;width:414px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;" class="form-control">
+               {% for data in all_member_user %}
+               {% if data.id in assign_member_list %}
+               <input type="checkbox" checked  name="assign_project_user_list[]" value="{{data.id}}">
+               <label >{{data.name}}</label><br>
+               {% else %}
+               <input type="checkbox"   name="assign_project_user_list[]" value="{{data.id}}">
+               <label >{{data.name}}</label><br>
+               {% endif %}
+               {% endfor %}
+            </div>
+         </div>
+         <div class="col-lg-6 col-md-6">
+            <div class="form-group">
+               <label  class=" col-xl-8 col-form-label">Description</label>
+               <div class="col-xl-12">
+                  <textarea name="description" class="form-control" rows="5">{{project_obj.description}}</textarea>
+               </div>
+            </div>
+         </div>
+         <div class="second">
+            <div class="col-md-12 text-center">
+               <a href="/project"><button class="btn btn-primary btn-lg" style="background-color:#393830;" type="button" >Back</button></a>
+               <button class="btn btn-primary btn-lg" type="submit" >Submit</button>
+            </div>
+         </div>
+   </form>
+   </div>
+</main>
+{% endblock %}

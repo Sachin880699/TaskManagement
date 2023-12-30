@@ -1,0 +1,4 @@
+ID,Asset Name,Start Date,Start Time,End Date,End Time,Source language,Target Language,Word Count,Translated Wordcount,Status
+1,Nykaa_upload_file_20211116-045739.xlsx,2021-11-16,05:30:48.596498,2021-11-16,05:30:48.575410,Finnish,French,2191,2191,Completed
+2,Nykaa_upload_file_20211116-055449.xlsx,2021-11-16,07:09:08.653816,2021-11-16,07:09:08.653557,Arabic,Fiji,2191,2191,Completed
+3,Nykaa_upload_file_20211116-105708.xlsx,2021-11-16,11:02:25.070810,,,Armenian,English,2191,,Initiated
